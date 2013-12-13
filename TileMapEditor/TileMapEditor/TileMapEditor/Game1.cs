@@ -168,13 +168,9 @@ namespace TileMapEditor
                 // Get mouse input
                 if (tileSheet != null)
                 {
-                    if (drawableLayer == 0)
-                        map.TileLayer1.SetTiles(selectedTileNum + 1);
-                    else if (drawableLayer == 1)
-                        map.TileLayer2.SetTiles(selectedTileNum + 1);
-                    else if (drawableLayer == 2)
-                        map.SolidLayer.SetTiles(1);
+                    map.layers[drawableLayer].SetTiles(selectedTileNum + 1);
                 }
+
 
                 // Update the mouse state
                 curState = Mouse.GetState();
@@ -191,6 +187,9 @@ namespace TileMapEditor
 
                 // Update the hud
                 hud.Update();
+
+                // Update button press values
+                
 
                 base.Update(gameTime);
             }
@@ -219,19 +218,12 @@ namespace TileMapEditor
             hud.Draw();
 
             // Draw the selected tile overlay
-            if (tileSheet != null && drawableLayer != 2)
+            if (tileSheet != null)
                 spriteBatch.Draw(tileSheet, new Vector2(curState.X - tileWidth / 2, curState.Y - tileHeight / 2),
                     map.tileSet[selectedTileNum], Color.White);
 
             // Show the user which layer they are drawing on
-            string layerText = "";
-
-            if (drawableLayer == 0)
-                layerText = "Layer 1";
-            else if (drawableLayer == 1)
-                layerText = "Layer 2";
-            else if (drawableLayer == 2)
-                layerText = "Collision Layer";
+            string layerText = "Layer " + drawableLayer + " Collision: " + map.layers[drawableLayer].collidable;
 
             spriteBatch.DrawString(basic, layerText, new Vector2(5, 5), Color.White);
             

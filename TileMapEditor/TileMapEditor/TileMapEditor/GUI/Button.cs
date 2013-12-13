@@ -50,6 +50,12 @@ namespace TileMapEditor.GUI
 
             // Update prevClicked
             prevClicked = prevClicked || clicked;
+
+            // Reset prevClicked
+            if (mouse.LeftButton != ButtonState.Pressed)
+            {
+                prevClicked = false;
+            }
         }
 
 

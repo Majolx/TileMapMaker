@@ -17,9 +17,8 @@ namespace TileMapEditor
         public int tileHeight { get; set; }
 
         // Declare new layers
-        public Layer TileLayer1;
-        public Layer TileLayer2;
-        public Layer SolidLayer;
+        public List<Layer> layers = new List<Layer>();
+
 
         // Declare a rectangle list to hold the tile bounds
         public List<Rectangle> tileSet = new List<Rectangle>();
@@ -36,9 +35,7 @@ namespace TileMapEditor
             this.tileHeight = tileHeight;
 
             // Initialize the layers
-            TileLayer1 = new Layer(mapWidth, mapHeight, tileWidth, tileHeight);
-            TileLayer2 = new Layer(mapWidth, mapHeight, tileWidth, tileHeight);
-            SolidLayer = new Layer(mapWidth, mapHeight, tileWidth, tileHeight);
+            layers.Add(new Layer(mapWidth, mapHeight, tileWidth, tileHeight, false));
         }
 
 
@@ -83,10 +80,14 @@ namespace TileMapEditor
                 objWriter.WriteLine(tileHeight);
                 objWriter.WriteLine(tileWidth);
 
+                // Write the amount of layers
+                objWriter.WriteLine(layers.Count);
+
                 // Write the layers to the text file
-                TileLayer1.SaveLayer(objWriter);
-                TileLayer2.SaveLayer(objWriter);
-                SolidLayer.SaveLayer(objWriter);
+                foreach (Layer layer in layers)
+                {
+                    layer.SaveLayer(objWriter);
+                }
 
                 // Close the text file and dispose of the graphics object
                 objWriter.Close();
@@ -114,14 +115,14 @@ namespace TileMapEditor
                 tileWidth = Convert.ToInt32(objReader.ReadLine());
 
                 // Reinitialize the map layers
-                TileLayer1 = new Layer(mapWidth, mapHeight, tileWidth, tileHeight);
-                TileLayer2 = new Layer(mapWidth, mapHeight, tileWidth, tileHeight);
-                SolidLayer = new Layer(mapWidth, mapHeight, tileWidth, tileHeight);
+                for (int i = 0; i < layers.Count; i++)
+                {
+                    // Read the collidability property
+                    bool collidable = Convert.ToBoolean(objReader.ReadLine());
 
-                // Load the layers
-                TileLayer1.LoadLayer(objReader);
-                TileLayer2.LoadLayer(objReader);
-                SolidLayer.LoadLayer(objReader);
+                    layers[i] = new Layer(mapWidth, mapHeight, tileWidth, tileHeight, collidable);
+                    layers[i].LoadLayer(objReader);
+                }
 
                 // Close the text file and dispose of the graphics object
                 objReader.Close();
@@ -143,36 +144,18 @@ namespace TileMapEditor
                 {
                     for (int y = 0; y < mapWidth; ++y)
                     {
-                        // Tile Layer 1
-                        if (TileLayer1.layer[y, x] != 0)
-                        {
-                            // Get the tile
-                            bounds = tileSet[TileLayer1.layer[y, x] - 1];
 
-                            // Draw the tile
-                            Game1.spriteBatch.Draw(Game1.tileSheet, new Vector2(((y - Game1.drawOffset.X) * tileWidth),
+                        foreach (Layer layer in layers)
+                        {
+                            if (layer.layer[y, x] != 0)
+                            {
+                                bounds = tileSet[layer.layer[y, x] - 1];
+
+                                Game1.spriteBatch.Draw(Game1.tileSheet, new Vector2(((y - Game1.drawOffset.X) * tileWidth),
                                                  ((x - Game1.drawOffset.Y) * tileHeight)), bounds, Color.White);
+                            }
                         }
 
-                        // Tile Layer 2
-                        if (TileLayer2.layer[y, x] != 0)
-                        {
-                            // Get the tile
-                            bounds = tileSet[TileLayer2.layer[y, x] - 1];
-
-                            // Draw the tile
-                            Game1.spriteBatch.Draw(Game1.tileSheet, new Vector2(((y - Game1.drawOffset.X) * tileWidth),
-                                                 ((x - Game1.drawOffset.Y) * tileHeight)), bounds, Color.White);
-                        }
-
-                        // Solid Layer
-                        if (SolidLayer.layer[y, x] != 0)
-                        {
-                            // Draw it in screen space
-                            Game1.spriteBatch.Draw(Game1.solid, new Vector2(((y - Game1.drawOffset.X) * tileWidth),
-                                                 ((x - Game1.drawOffset.Y) * tileHeight)), new Rectangle(0, 0, tileWidth, tileHeight),
-                                                   new Color(255, 255, 255, 100));
-                        }
                     }
                 }
             }

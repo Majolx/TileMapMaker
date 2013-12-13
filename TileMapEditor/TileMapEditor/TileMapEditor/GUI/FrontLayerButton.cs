@@ -39,9 +39,12 @@ namespace TileMapEditor.GUI
         /// </summary>
         public override void Effect()
         {
-            // Set the drawable layer
-            Game1.drawableLayer = 1;
-            base.prevClicked = false;
+            // Increment the drawable layer
+            if (Game1.drawableLayer++ >= Game1.map.layers.Count - 1)
+            {
+                Game1.map.layers.Add(new Layer(Game1.map.mapWidth, Game1.map.mapHeight, Game1.map.tileWidth, Game1.map.tileHeight, false));
+            }
+
 
             base.Effect();
         }

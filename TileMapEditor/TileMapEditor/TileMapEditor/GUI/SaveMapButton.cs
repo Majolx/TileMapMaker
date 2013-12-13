@@ -52,6 +52,8 @@ namespace TileMapEditor.GUI
             else
                 base.prevClicked = false;
 
+            // Unfreeze the game
+            Game1.gameState = GameState.PLAY;
 
             base.Effect();
         }

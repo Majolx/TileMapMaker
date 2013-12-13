@@ -39,9 +39,11 @@ namespace TileMapEditor.GUI
         /// </summary>
         public override void Effect()
         {
-            // Set the drawable layer
-            Game1.drawableLayer = 0;
-            base.prevClicked = false;
+            if (Game1.drawableLayer > 0)
+                Game1.drawableLayer--;
+            else
+                Game1.drawableLayer = 0;
+
 
             base.Effect();
         }

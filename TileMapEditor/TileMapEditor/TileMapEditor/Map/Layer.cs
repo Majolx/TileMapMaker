@@ -15,14 +15,16 @@ namespace TileMapEditor
 
         // Declare map and tile size
         int mapWidth, mapHeight, tileWidth, tileHeight;
+        public bool collidable;
 
-
-        public Layer(int mapWidth, int mapHeight, int tileWidth, int tileHeight)
+        public Layer(int mapWidth, int mapHeight, int tileWidth, int tileHeight, bool collidable)
         {
             this.mapWidth = mapWidth;
             this.mapHeight = mapHeight;
             this.tileWidth = tileWidth;
             this.tileHeight = tileHeight;
+            this.collidable = collidable;
+
             layer = new int[mapWidth, mapHeight];
         }
 
@@ -73,6 +75,9 @@ namespace TileMapEditor
         {
             try
             {
+                // Write the layer's collidability property
+                objWriter.WriteLine(collidable);
+
                 // Write the Layer to the text file
                 for (int i = 0; i < mapWidth; ++i)
                 {

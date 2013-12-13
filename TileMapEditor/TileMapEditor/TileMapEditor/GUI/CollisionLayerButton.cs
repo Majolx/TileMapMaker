@@ -39,9 +39,15 @@ namespace TileMapEditor.GUI
         /// </summary>
         public override void Effect()
         {
-            // Set the drawable layer
-            Game1.drawableLayer = 2;
-            base.prevClicked = false;
+            if (Game1.map.layers[Game1.drawableLayer].collidable == false)
+            {
+                Game1.map.layers[Game1.drawableLayer].collidable = true;
+            }
+            else
+            {
+                Game1.map.layers[Game1.drawableLayer].collidable = false;
+            }
+
 
             base.Effect();
         }

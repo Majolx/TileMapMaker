@@ -76,6 +76,10 @@ namespace TileMapEditor.GUI
                 // Reset the button click property
                 base.prevClicked = false;
             }
+
+            // Unfreeze the map
+            Game1.gameState = GameState.PLAY;
+
             base.Effect();
         }
     }
